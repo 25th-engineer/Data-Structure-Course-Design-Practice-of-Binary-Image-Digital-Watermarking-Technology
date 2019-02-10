@@ -83,6 +83,9 @@ void MainWindow::on_pushButtonEncode_clicked()
     ui->graphicsViewAfter->show();
     ui->graphicsViewAfter->fitInView(image.rect(), Qt::KeepAspectRatio);
     //WT.saveBmp(dst);
+    //qDebug() << "In void MainWindow::on_pushButtonEncode_clicked(), height = " << height << endl;
+    //qDebug() << "void MainWindow::on_pushButtonEncode_clicked(), width = " << width << endl;
+    WT.savebmp("encode.bmp", dst, height, width);
 }
 
 void MainWindow::on_pushButtonDecode_clicked()

@@ -111,6 +111,111 @@ uchar* watermark::readBmp(const char *bmpName, int& bmpWidth, int& bmpHeight)
     }
 }
 
+bool watermark::savebmp(const char* filename, uchar* buffer, const u_int32_t height, const u_int32_t width)
+{
+    RGBQUAD *pColorTable = new RGBQUAD;
+    if(buffer == Q_NULLPTR)
+    {
+        QMessageBox::warning(Q_NULLPTR, "Error", "The Buffer is nullptr!");
+        return false;
+    }
+    uchar* data = new uchar[height*width];
+    for(int i = 0; i < height; i++)
+    {
+        for(int j = 0; j<width; j++)
+        {
+            data[i*width + j] = buffer[(height- i - 1)*width + j];
+        }
+    }
+
+    int colorTableSize = 1024;
+    BITMAPFILEHEADER fileHeader;
+    fileHeader.bfType = 0x4D42;
+    fileHeader.bfReserved1 = 0;
+    fileHeader.bfReserved2 = 0;
+    fileHeader.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + colorTableSize + height*width;
+    fileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + colorTableSize;
+
+    BITMAPINFOHEADER bitmapHeader = { 0 };
+    bitmapHeader.biSize = sizeof(BITMAPINFOHEADER);
+    //qDebug() << "In bool watermark::savebmp(const char* filename, uchar* buffer, const u_int32_t height, const u_int32_t width), height = " << height << endl;
+    //qDebug() << "In bool watermark::savebmp(const char* filename, uchar* buffer, const u_int32_t height, const u_int32_t width), width = " << width << endl;
+    //qDebug() << sizeof(BITMAPINFOHEADER) << endl;
+    bitmapHeader.biHeight = height;
+    bitmapHeader.biWidth = width;
+    bitmapHeader.biPlanes = 1;
+    bitmapHeader.biBitCount = 8;
+    bitmapHeader.biSizeImage = height*width;
+    bitmapHeader.biCompression = 0;
+
+    FILE *fp = fopen(filename, "wb");
+    //qDebug() << "OK! line 154 " << endl;
+    if(fp == Q_NULLPTR)
+    {
+        QMessageBox::warning(Q_NULLPTR, "Error", "Error in Save File!");
+        //qDebug() << "OK! line 156 " << endl;
+        return false;
+    }
+    else
+    {
+        fwrite(&fileHeader, sizeof(BITMAPFILEHEADER), 1, fp);
+        //qDebug() << "OK! line 162 " << endl;
+        fwrite(&bitmapHeader, sizeof(BITMAPINFOHEADER), 1, fp);
+        //qDebug() << "OK! line 164 " << endl;
+        //qDebug() << "pColorTable address = " << pColorTable << endl;
+        fwrite(pColorTable, sizeof(RGBQUAD), 256, fp);
+        delete pColorTable;
+        //qDebug() << "OK! line 168 " << endl;
+        fwrite(data, height*width, 1, fp);
+        delete []data;
+        //qDebug() << "OK! line 171 " << endl;
+        fclose(fp);
+        //qDebug() << "OK! line 173 " << endl;
+        return true;
+    }
+
+    /*
+    FILE *fp;
+    if( (fp = fopen(filename,"wb") )== NULL)   //以二进制写入方式打开
+    {
+        //cout<<"打开失败!"<<endl;
+        QMessageBox::warning(Q_NULLPTR, "Error", "The Buffer is nullptr!");
+        //return -1;
+        return false;
+    }
+    //设置BITMAPFILEHEADER参数
+    BITMAPFILEHEADER fileHead;
+    fileHead.bfType = 0x4D42;
+    fileHead.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + lineByte * biHeight;
+    fileHead.bfReserved1 = 0;
+    fileHead.bfReserved2 = 0;
+    fileHead.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+    fwrite(&fileHead,sizeof(BITMAPFILEHEADER),1,fp);
+    //设置BITMAPINFOHEADER参数
+    BITMAPINFOHEADER infoHead;
+    infoHead.biSize = 40;
+    infoHead.biWidth = biWidth;
+    infoHead.biHeight = biHeight;
+    infoHead.biPlanes = 1;
+    infoHead.biBitCount = biBitCount;
+    infoHead.biCompression = 0;
+    infoHead.biSizeImage = lineByte * biHeight;
+    infoHead.biXPelsPerMeter = 0;
+    infoHead.biYPelsPerMeter = 0;
+    infoHead.biClrUsed = 0;
+    infoHead.biClrImportant = 0;
+    //写入
+    fwrite(&infoHead,sizeof(BITMAPINFOHEADER),1,fp);
+
+
+    fwrite(pBmpBuf,sizeof(char),height*width,fp);
+    fclose(fp);    //关闭文件
+    //return 0;
+    return true;
+    */
+}
+
+
 // generate keyArray
 byteArray watermark::generateKey(const int length)
 {

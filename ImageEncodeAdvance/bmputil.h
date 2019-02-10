@@ -21,8 +21,10 @@ public:
     uchar* watermarkImg(uchar* buffer, uchar* edge, const int size, byteArray code);
 
     //BITMAPINFODEADER &operator=(BITMAPINFODEADER& BMIH );//failed
-    int saveBmp(uchar* bmpName);
+    //int saveBmp(uchar* bmpName);
+    //bool savebmp(const char* filename, uchar* buffer, const int height, const int width);
 
+    bool savebmp(const char* filename, uchar* buffer, const u_int32_t height, const u_int32_t width);
 private:
     BITMAPINFODEADER BMIH;
     BITMAPFILEHEADER BMFH;
