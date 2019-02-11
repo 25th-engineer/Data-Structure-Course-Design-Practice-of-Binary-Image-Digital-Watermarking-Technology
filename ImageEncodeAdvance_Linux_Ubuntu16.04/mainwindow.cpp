@@ -59,16 +59,22 @@ void MainWindow::on_pushButtonEncode_clicked()
     watermark WT;
     if(ui->comboBoxWaterMark->currentIndex() == 2)
     {
+        QRegExp regx("[0-1]+$");
+        QValidator *validator = new QRegExpValidator(regx, this );
+        ui->lineEditWaterMark->setValidator( validator );
         QString str1 = ui->lineEditWaterMark->text();
-        //code = byte2Array(ui->lineEditWaterMark->text());
-
         code = WT.byte2Array(str1);
+        delete validator;
     }
     else
     {
+        QRegExp regx(".+\n");
+        QValidator *validator = new QRegExpValidator(regx, this );
+        ui->lineEditWaterMark->setValidator( validator );
         QString str2 = ui->lineEditWaterMark->text();
         //code = str2Array(ui->lineEditWaterMark->text());
         code = WT.str2Array(str2);
+        delete validator;
     }
     key = WT.generateKey(code.length());
     int width, height;
