@@ -77,7 +77,8 @@ void MainWindow::on_pushButtonEncode_clicked()
         ui->lineEditWaterMark->setValidator( validator );
         QString str1 = ui->lineEditWaterMark->text();
         code = WT.byte2Array(str1);
-    }
+		delete validator;
+	}
     else
     {
         QRegExp regx(".+\n");
@@ -86,7 +87,8 @@ void MainWindow::on_pushButtonEncode_clicked()
         QString str2 = ui->lineEditWaterMark->text();
         //code = str2Array(ui->lineEditWaterMark->text());
         code = WT.str2Array(str2);
-    }
+		delete validator;
+	}
     key = WT.generateKey(code.length());
     int width, height;
     uchar* buffer = WT.readBmp(ui->lineEdit->displayText().toStdString().data(), width, height);
