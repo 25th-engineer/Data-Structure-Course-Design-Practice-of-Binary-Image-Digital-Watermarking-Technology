@@ -271,6 +271,10 @@ byteArray watermark::byte2Array(QString &number)
         else
         {
             QMessageBox::warning(nullptr, "Error", "Error in byte2Array: Charater else than 0 and 1!");
+            //break;
+            //return Q_NULLPTR;
+            //exit(-1);
+            //continue;
         }
     }
     return res;

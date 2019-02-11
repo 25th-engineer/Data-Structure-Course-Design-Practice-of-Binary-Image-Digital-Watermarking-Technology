@@ -1,8 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QPixmap>
+#include "bmputil.h"
 
 namespace Ui {
 class MainWindow;

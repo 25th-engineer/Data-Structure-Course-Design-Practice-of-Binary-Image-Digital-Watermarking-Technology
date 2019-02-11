@@ -19,6 +19,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->comboBoxWaterMark->setModel(new QStringListModel(bands));
     ui->comboBoxWaterMark->setCurrentIndex(2);
     ui->lineEditWaterMark->setText("01010101010101010101010101010101");
+    /*
+    if(ui->comboBoxWaterMark->currentIndex() == 2)
+    {
+        QRegExp regx("[0-1]+$");
+        QValidator *validator = new QRegExpValidator(regx, this );
+        ui->lineEditWaterMark->setValidator( validator );
+    }
+    else
+    {
+        QRegExp regx(".");
+        QValidator *validator = new QRegExpValidator(regx, this );
+        ui->lineEditWaterMark->setValidator( validator );
+    }
+    */
 }
 
 MainWindow::~MainWindow()
@@ -58,12 +72,17 @@ void MainWindow::on_pushButtonEncode_clicked()
     watermark WT;
     if(ui->comboBoxWaterMark->currentIndex() == 2)
     {
+        QRegExp regx("[0-1]+$");
+        QValidator *validator = new QRegExpValidator(regx, this );
+        ui->lineEditWaterMark->setValidator( validator );
         QString str1 = ui->lineEditWaterMark->text();
-        //code = byte2Array(ui->lineEditWaterMark->text());
         code = WT.byte2Array(str1);
     }
     else
     {
+        //QRegExp regx(".+\n");
+        //QValidator *validator = new QRegExpValidator(regx, this );
+        //ui->lineEditWaterMark->setValidator( validator );
         QString str2 = ui->lineEditWaterMark->text();
         //code = str2Array(ui->lineEditWaterMark->text());
         code = WT.str2Array(str2);
