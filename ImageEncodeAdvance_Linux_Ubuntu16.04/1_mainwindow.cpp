@@ -35,11 +35,10 @@ void MainWindow::on_pushButtonBrowse_clicked()
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 {
     Q_UNUSED(arg1);
-    watermark WT;
     if(QFileInfo(ui->lineEdit->displayText()).exists())
     {
         int height, width;
-        uchar* buffer = WT.readBmp(ui->lineEdit->displayText().toStdString().data(), width, height);
+        uchar* buffer = readBmp(ui->lineEdit->displayText().toStdString().data(), width, height);
         if(buffer)
         {
             QPixmap img = QPixmap::fromImage(QImage(buffer, width, height, QImage::Format_Grayscale8));
@@ -55,24 +54,19 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 void MainWindow::on_pushButtonEncode_clicked()
 {
     byteArray code;
-    watermark WT;
     if(ui->comboBoxWaterMark->currentIndex() == 2)
     {
-        QString str1 = ui->lineEditWaterMark->text();
-        //code = byte2Array(ui->lineEditWaterMark->text());
-        code = WT.byte2Array(str1);
+        code = byte2Array(ui->lineEditWaterMark->text());
     }
     else
     {
-        QString str2 = ui->lineEditWaterMark->text();
-        //code = str2Array(ui->lineEditWaterMark->text());
-        code = WT.str2Array(str2);
+        code = str2Array(ui->lineEditWaterMark->text());
     }
-    key = WT.generateKey(code.length());
+    key = generateKey(code.length());
     int width, height;
-    uchar* buffer = WT.readBmp(ui->lineEdit->displayText().toStdString().data(), width, height);
-    uchar* edge = WT.edgeExtract(buffer, width, height);
-    dst = WT.watermarkImg(buffer, edge, width*height, WT.encode(code, key));
+    uchar* buffer = readBmp(ui->lineEdit->displayText().toStdString().data(), width, height);
+    uchar* edge = edgeExtract(buffer, width, height);
+    dst = watermarkImg(buffer, edge, width*height, encode(code, key));
 
     image = QPixmap::fromImage(QImage(dst, width, height, QImage::Format_Grayscale8));
     QGraphicsScene *scene = new QGraphicsScene;
@@ -81,21 +75,20 @@ void MainWindow::on_pushButtonEncode_clicked()
     ui->graphicsViewAfter->show();
     ui->graphicsViewAfter->fitInView(image.rect(), Qt::KeepAspectRatio);
 
-    WT.savebmp("encode.bmp", dst, height, width);
+    savebmp("encode.bmp", dst, height, width);
 }
 
 void MainWindow::on_pushButtonDecode_clicked()
 {
-    watermark WT;
     int width, height;
-    uchar* buffer = WT.readBmp(ui->lineEdit->displayText().toStdString().data(), width, height);
-    byteArray code = WT.encode(WT.decodeImg(buffer, dst, width, height, key.length()), key);
+    uchar* buffer = readBmp(ui->lineEdit->displayText().toStdString().data(), width, height);
+    byteArray code = encode(decodeImg(buffer, dst, width, height, key.length()), key);
     if(ui->comboBoxWaterMark->currentIndex() == 2)
     {
-        QMessageBox::warning(this, "Decode", "The watermark is " + WT.array2byte(code)+"!");
+        QMessageBox::warning(this, "Decode", "The watermark is " + array2byte(code)+"!");
     }
     if(ui->comboBoxWaterMark->currentIndex() == 1)
     {
-        QMessageBox::warning(this, "Decode", "The watermark is " + WT.array2str(code)+"!");
+        QMessageBox::warning(this, "Decode", "The watermark is " + array2str(code)+"!");
     }
 }

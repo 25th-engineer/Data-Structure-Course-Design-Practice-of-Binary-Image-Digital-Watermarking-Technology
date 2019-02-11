@@ -7,6 +7,7 @@
 #include <QMessageBox>
 
 #include "bmputil.h"
+//#include "bmputil.cpp"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -60,6 +61,7 @@ void MainWindow::on_pushButtonEncode_clicked()
     {
         QString str1 = ui->lineEditWaterMark->text();
         //code = byte2Array(ui->lineEditWaterMark->text());
+
         code = WT.byte2Array(str1);
     }
     else
@@ -73,21 +75,23 @@ void MainWindow::on_pushButtonEncode_clicked()
     uchar* buffer = WT.readBmp(ui->lineEdit->displayText().toStdString().data(), width, height);
     uchar* edge = WT.edgeExtract(buffer, width, height);
     dst = WT.watermarkImg(buffer, edge, width*height, WT.encode(code, key));
-
+    //imwrite("encode.bmp", dst*255);
     image = QPixmap::fromImage(QImage(dst, width, height, QImage::Format_Grayscale8));
     QGraphicsScene *scene = new QGraphicsScene;
     scene->addPixmap(image);
     ui->graphicsViewAfter->setScene(scene);
     ui->graphicsViewAfter->show();
     ui->graphicsViewAfter->fitInView(image.rect(), Qt::KeepAspectRatio);
-
+    //WT.saveBmp(dst);
+    //qDebug() << "In void MainWindow::on_pushButtonEncode_clicked(), height = " << height << endl;
+    //qDebug() << "void MainWindow::on_pushButtonEncode_clicked(), width = " << width << endl;
     WT.savebmp("encode.bmp", dst, height, width);
 }
 
 void MainWindow::on_pushButtonDecode_clicked()
 {
-    watermark WT;
     int width, height;
+    watermark WT;
     uchar* buffer = WT.readBmp(ui->lineEdit->displayText().toStdString().data(), width, height);
     byteArray code = WT.encode(WT.decodeImg(buffer, dst, width, height, key.length()), key);
     if(ui->comboBoxWaterMark->currentIndex() == 2)

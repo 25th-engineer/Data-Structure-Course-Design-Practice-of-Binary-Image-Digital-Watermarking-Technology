@@ -25,11 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    additional_utility.cpp \
+    bmputil.cpp
 
 HEADERS += \
         mainwindow.h \
-    bmputil.h
+    bmputil.h \
+    additional_utility.h
 
 FORMS += \
         mainwindow.ui
+
+RC_FILE = my_app.rc
