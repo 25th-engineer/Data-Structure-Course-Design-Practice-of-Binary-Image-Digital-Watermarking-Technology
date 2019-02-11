@@ -80,9 +80,9 @@ void MainWindow::on_pushButtonEncode_clicked()
     }
     else
     {
-        //QRegExp regx(".+\n");
-        //QValidator *validator = new QRegExpValidator(regx, this );
-        //ui->lineEditWaterMark->setValidator( validator );
+        QRegExp regx(".+\n");
+        QValidator *validator = new QRegExpValidator(regx, this );
+        ui->lineEditWaterMark->setValidator( validator );
         QString str2 = ui->lineEditWaterMark->text();
         //code = str2Array(ui->lineEditWaterMark->text());
         code = WT.str2Array(str2);
