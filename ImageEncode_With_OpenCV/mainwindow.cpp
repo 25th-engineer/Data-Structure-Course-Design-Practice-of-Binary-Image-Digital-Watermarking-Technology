@@ -17,9 +17,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     image = QPixmap();
 
-    QStringList bands = QStringList() << "Image" << "QString" << "byteArray";
+    QStringList bands = QStringList() << "QString" << "byteArray";
     ui->comboBoxWaterMark->setModel(new QStringListModel(bands));
-    ui->comboBoxWaterMark->setCurrentIndex(2);
+    ui->comboBoxWaterMark->setCurrentIndex(1);
     ui->lineEditWaterMark->setText("01010101010101010101010101010101");
 }
 
@@ -48,18 +48,22 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
     }
 }
 
-
 void MainWindow::on_pushButtonEncode_clicked()
 {
+    watermark WT;
     byteArray code;
-    if(ui->comboBoxWaterMark->currentIndex() == 2)
+    if(ui->comboBoxWaterMark->currentIndex() == 1)
     {
 //        if(ui->lineEditWaterMark->text().length()!=32)
 //        {
 //            QMessageBox::warning(this, "Error", "Only Support for 32-size byteArray!");
 //        }
+        QRegExp regx("[0-1]+$");
+        QValidator *validator = new QRegExpValidator(regx, this );
+        ui->lineEditWaterMark->setValidator( validator );
         QString str = ui->lineEditWaterMark->text();
-        code = byte2Array(str);
+        code = WT.byte2Array(str);
+        delete validator;
     }
     else
     {
@@ -67,18 +71,22 @@ void MainWindow::on_pushButtonEncode_clicked()
 //        {
 //            QMessageBox::warning(this, "Error", "Only Support for 4-size string!");
 //        }
+        QRegExp regx(".+\n");
+        QValidator *validator = new QRegExpValidator(regx, this );
+        ui->lineEditWaterMark->setValidator( validator );
         QString str = ui->lineEditWaterMark->text();
-        code = str2Array(str);
+        code = WT.str2Array(str);
+        delete validator;
     }
-    key = generateKey(code.length());
+    key = WT.generateKey(code.length());
     Mat src = imread(ui->lineEdit->displayText().toStdString().data(), IMREAD_ANYDEPTH)/255;
     //Mat src = imread(ui->lineEdit->displayText().toStdString().data(), IMREAD_ANYDEPTH);
-    Mat edge = edgeExtract(src);
-    Mat dst = watermarkImg(src, edge, encode(code, key));
+    Mat edge = WT.edgeExtract(src);
+    Mat dst = WT.watermarkImg(src, edge, WT.encode(code, key));
     //imwrite("encode.bmp", dst);
     imwrite("encode.bmp", dst*255);
 
-    auto buffer = mat2Array(dst);
+    auto buffer = WT.mat2Array(dst);
     image = QPixmap::fromImage(QImage(&buffer[0], src.cols, src.rows, QImage::Format_Grayscale8));
     QGraphicsScene *scene = new QGraphicsScene;
     scene->addPixmap(image);
@@ -97,17 +105,18 @@ void MainWindow::on_pushButtonEncode_clicked()
 
 void MainWindow::on_pushButtonDecode_clicked()
 {
+    watermark WT;
     Mat src = imread(ui->lineEdit->displayText().toStdString().data(), IMREAD_ANYDEPTH)/255;
     //Mat src = imread(ui->lineEdit->displayText().toStdString().data(), IMREAD_ANYDEPTH);
     Mat dst = imread("encode.bmp", IMREAD_ANYDEPTH)/255;
     //Mat dst = imread("encode.bmp", IMREAD_ANYDEPTH);
-    byteArray code = encode(decodeImg(src, dst, key.length()), key);
-    if(ui->comboBoxWaterMark->currentIndex() == 2)
-    {
-        QMessageBox::warning(this, "Decode", "The watermark is " + array2byte(code)+"!");
-    }
+    byteArray code = WT.encode(WT.decodeImg(src, dst, key.length()), key);
     if(ui->comboBoxWaterMark->currentIndex() == 1)
     {
-        QMessageBox::warning(this, "Decode", "The watermark is " + array2str(code)+"!");
+        QMessageBox::warning(this, "Decode", "The watermark is " + WT.array2byte(code)+"!");
+    }
+    if(ui->comboBoxWaterMark->currentIndex() == 0)
+    {
+        QMessageBox::warning(this, "Decode", "The watermark is " + WT.array2str(code)+"!");
     }
 }

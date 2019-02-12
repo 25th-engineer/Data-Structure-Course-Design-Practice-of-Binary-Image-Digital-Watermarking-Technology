@@ -45,11 +45,13 @@ LIBS += /usr/local/lib/libopencv_calib3d.so.4.0.1 \
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    watermarkutil.cpp
+    watermarkutil.cpp \
+    additional_utility.cpp
 
 HEADERS += \
         mainwindow.h \
-    watermarkutil.h
+    watermarkutil.h \
+    additional_utility.h
 
 FORMS += \
         mainwindow.ui

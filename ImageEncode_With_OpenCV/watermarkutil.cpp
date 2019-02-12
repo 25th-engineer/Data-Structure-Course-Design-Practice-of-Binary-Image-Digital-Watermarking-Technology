@@ -12,7 +12,7 @@
 using namespace cv;
 
 // return edge from images
-cv::Mat edgeExtract(const cv::Mat &src)
+cv::Mat watermark::edgeExtract(const cv::Mat &src)
 {
     Mat dst;
     Mat B1 = Mat::zeros(src.rows, src.cols, CV_8U);
@@ -85,7 +85,7 @@ cv::Mat edgeExtract(const cv::Mat &src)
 }
 
 // encode byteArray with keyArray
-byteArray encode(byteArray src, byteArray key)
+byteArray watermark::encode(byteArray src, byteArray key)
 {
     byteArray res;
     if(src.length() != key.length())
@@ -103,7 +103,7 @@ byteArray encode(byteArray src, byteArray key)
 }
 
 // generate keyArray
-byteArray generateKey(int length)
+byteArray watermark::generateKey(int length)
 {
     byteArray res;
     for(int i = 0; i<length; i++)
@@ -122,7 +122,7 @@ byteArray generateKey(int length)
 }
 
 // data hide
-Mat watermarkImg(Mat src, Mat edge, byteArray code)
+Mat watermark::watermarkImg(Mat src, Mat edge, byteArray code)
 {
     int count = 0;
     for (int i = 0; i< src.rows; i++)
@@ -142,7 +142,7 @@ Mat watermarkImg(Mat src, Mat edge, byteArray code)
     return src;
 }
 
-byteArray decodeImg(Mat src, Mat dst, int length)
+byteArray watermark::decodeImg(Mat src, Mat dst, int length)
 {
     Mat edge = edgeExtract(src);
     byteArray res;
@@ -164,7 +164,7 @@ byteArray decodeImg(Mat src, Mat dst, int length)
     return res;
 }
 
-int sum(Mat src)
+int watermark::sum(Mat src)
 {
     int count = 0;
     for (int i = 0; i< src.rows; i++)
@@ -177,7 +177,7 @@ int sum(Mat src)
     return count;
 }
 
-QVector<uchar> mat2Array(Mat& src)
+QVector<uchar> watermark::mat2Array(Mat& src)
 {
     QVector<uchar> res;
     for (int i = 0; i< src.rows; i++)
@@ -190,7 +190,7 @@ QVector<uchar> mat2Array(Mat& src)
     return res;
 }
 
-byteArray byte2Array(QString &number)
+byteArray watermark::byte2Array(QString &number)
 {
     byteArray res;
     for(auto byte : number)
@@ -205,13 +205,14 @@ byteArray byte2Array(QString &number)
         }
         else
         {
-            QMessageBox::warning(nullptr, "Error", "Error in byte2Array: Charater else than 0 and 1!");
+            QMessageBox::warning(nullptr, "Error", "Error in byte2Array: Charater else than 0 and 1!\nThe application will be forced to abort.");
+            throw EXIT_FAILURE;
         }
     }
     return res;
 }
 
-byteArray str2Array(QString &str)
+byteArray watermark::str2Array(QString &str)
 {
     QString num;
     for(auto character : str)
@@ -228,7 +229,7 @@ byteArray str2Array(QString &str)
     return byte2Array(num);
 }
 
-byteArray img2Array(QString &dir)
+byteArray watermark::img2Array(QString &dir)
 {
     Q_UNUSED(dir);
     QString str = "01010101010101010101010101010101";
@@ -236,7 +237,7 @@ byteArray img2Array(QString &dir)
     return byte2Array(str);
 }
 
-QString array2byte(byteArray &array)
+QString watermark::array2byte(byteArray &array)
 {
     QString res;
     for(auto ele:array)
@@ -253,7 +254,7 @@ QString array2byte(byteArray &array)
     return res;
 }
 
-QString array2str(byteArray &array)
+QString watermark::array2str(byteArray &array)
 {
     QString res;
     for(int i = 0 ; i<array.length(); i+=8)
