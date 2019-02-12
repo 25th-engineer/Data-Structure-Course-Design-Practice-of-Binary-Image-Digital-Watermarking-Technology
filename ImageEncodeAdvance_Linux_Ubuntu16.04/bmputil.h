@@ -26,8 +26,8 @@ private:
     int biWidth;
     int biHeight;
     int biBitCount;
-    unsigned char *pBmpBuf;
     int lineByte;
+    RGBQUAD* pColorTable;
 protected:
 
 

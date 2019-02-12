@@ -71,8 +71,8 @@ typedef struct tagRGBQUAD
 typedef struct tagIMAGEDATA
 {
     BYTE blue;
-    //BYTE green;//cancel the annotation by DFZ
-    //BYTE red;//cancel the annotation by DFZ
+    BYTE green;//cancel the annotation by DFZ
+    BYTE red;//cancel the annotation by DFZ
 }IMAGEDATA;
 
 

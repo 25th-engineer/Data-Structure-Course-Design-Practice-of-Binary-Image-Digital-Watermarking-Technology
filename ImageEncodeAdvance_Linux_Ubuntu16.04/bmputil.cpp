@@ -29,7 +29,7 @@ uchar* watermark::readBmp(const char *bmpName, int& bmpWidth, int& bmpHeight)
     //qDebug() << infohead.biBitCount << endl;
     if (biBitCount == 8)
     {
-        RGBQUAD* pColorTable = new RGBQUAD[256];
+        pColorTable = new RGBQUAD[256];
         fread(pColorTable, sizeof(RGBQUAD), 256, fp);
 
         uchar* pBmpBuf = new uchar[ bmpWidth * bmpHeight ];
@@ -60,7 +60,7 @@ uchar* watermark::readBmp(const char *bmpName, int& bmpWidth, int& bmpHeight)
 
 bool watermark::savebmp(const char* filename, uchar* buffer, const u_int32_t height, const u_int32_t width)
 {
-    RGBQUAD *pColorTable = new RGBQUAD;
+    //RGBQUAD *pColorTable = new RGBQUAD;
     if(buffer == Q_NULLPTR)
     {
         QMessageBox::warning(Q_NULLPTR, "Error", "The Buffer is nullptr!");
