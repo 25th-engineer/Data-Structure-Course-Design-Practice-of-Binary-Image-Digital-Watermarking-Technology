@@ -16,9 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     image = QPixmap();
 
-    QStringList bands = QStringList() << "Image" << "QString" << "byteArray";
+    QStringList bands = QStringList() << "QString" << "byteArray";
     ui->comboBoxWaterMark->setModel(new QStringListModel(bands));
-    ui->comboBoxWaterMark->setCurrentIndex(2);
+    ui->comboBoxWaterMark->setCurrentIndex(1);
     ui->lineEditWaterMark->setText("01010101010101010101010101010101");
 }
 
@@ -57,7 +57,7 @@ void MainWindow::on_pushButtonEncode_clicked()
 {
     byteArray code;
     watermark WT;
-    if(ui->comboBoxWaterMark->currentIndex() == 2)
+    if(ui->comboBoxWaterMark->currentIndex() == 1)
     {
         QRegExp regx("[0-1]+$");
         QValidator *validator = new QRegExpValidator(regx, this );
@@ -100,11 +100,11 @@ void MainWindow::on_pushButtonDecode_clicked()
     watermark WT;
     uchar* buffer = WT.readBmp(ui->lineEdit->displayText().toStdString().data(), width, height);
     byteArray code = WT.encode(WT.decodeImg(buffer, dst, width, height, key.length()), key);
-    if(ui->comboBoxWaterMark->currentIndex() == 2)
+    if(ui->comboBoxWaterMark->currentIndex() == 1)
     {
         QMessageBox::warning(this, "Decode", "The watermark is " + WT.array2byte(code)+"!");
     }
-    if(ui->comboBoxWaterMark->currentIndex() == 1)
+    if(ui->comboBoxWaterMark->currentIndex() == 0)
     {
         QMessageBox::warning(this, "Decode", "The watermark is " + WT.array2str(code)+"!");
     }

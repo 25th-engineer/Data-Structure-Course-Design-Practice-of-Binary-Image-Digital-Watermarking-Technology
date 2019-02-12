@@ -120,46 +120,6 @@ bool watermark::savebmp(const char* filename, uchar* buffer, const u_int32_t hei
         //qDebug() << "OK! line 173 " << endl;
         return true;
     }
-
-    /*
-    FILE *fp;
-    if( (fp = fopen(filename,"wb") )== NULL)   //以二进制写入方式打开
-    {
-        //cout<<"打开失败!"<<endl;
-        QMessageBox::warning(Q_NULLPTR, "Error", "The Buffer is nullptr!");
-        //return -1;
-        return false;
-    }
-    //设置BITMAPFILEHEADER参数
-    BITMAPFILEHEADER fileHead;
-    fileHead.bfType = 0x4D42;
-    fileHead.bfSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + lineByte * biHeight;
-    fileHead.bfReserved1 = 0;
-    fileHead.bfReserved2 = 0;
-    fileHead.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-    fwrite(&fileHead,sizeof(BITMAPFILEHEADER),1,fp);
-    //设置BITMAPINFOHEADER参数
-    BITMAPINFOHEADER infoHead;
-    infoHead.biSize = 40;
-    infoHead.biWidth = biWidth;
-    infoHead.biHeight = biHeight;
-    infoHead.biPlanes = 1;
-    infoHead.biBitCount = biBitCount;
-    infoHead.biCompression = 0;
-    infoHead.biSizeImage = lineByte * biHeight;
-    infoHead.biXPelsPerMeter = 0;
-    infoHead.biYPelsPerMeter = 0;
-    infoHead.biClrUsed = 0;
-    infoHead.biClrImportant = 0;
-    //写入
-    fwrite(&infoHead,sizeof(BITMAPINFOHEADER),1,fp);
-
-
-    fwrite(pBmpBuf,sizeof(char),height*width,fp);
-    fclose(fp);    //关闭文件
-    //return 0;
-    return true;
-    */
 }
 
 
@@ -332,7 +292,8 @@ byteArray watermark::byte2Array(QString &number)
         }
         else
         {
-            QMessageBox::warning(nullptr, "Error", "Error in byte2Array: Charater else than 0 and 1!");
+            QMessageBox::warning(nullptr, "Error", "Error in byte2Array: Charater else than 0 and 1!\nThe application will be forced to abort.");
+            throw EXIT_FAILURE;
         }
     }
     return res;

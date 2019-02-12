@@ -19,11 +19,6 @@ public:
     uchar* substract(uchar* buffer1, uchar* buffer2, const int size);
     uchar* translation(uchar* buffer, const int width, const int height, int x_off, int y_off);
     uchar* watermarkImg(uchar* buffer, uchar* edge, const int size, byteArray code);
-
-    //BITMAPINFODEADER &operator=(BITMAPINFODEADER& BMIH );//failed
-    //int saveBmp(uchar* bmpName);
-    //bool savebmp(const char* filename, uchar* buffer, const int height, const int width);
-
     bool savebmp(const char* filename, uchar* buffer, const u_int32_t height, const u_int32_t width);
 private:
     BITMAPINFODEADER BMIH;
