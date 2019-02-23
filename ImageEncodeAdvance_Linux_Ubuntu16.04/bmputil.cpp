@@ -142,6 +142,7 @@ byteArray watermark::generateKey(const int length)
     return res;
 }
 
+//获得原buffer图像右移x_off个单位，下移y_off个单位后得到的图像
 uchar* watermark::translation(uchar* buffer, const int width, const int height, int x_off, int y_off)
 {
     uchar* res = new uchar[width*height];
@@ -163,6 +164,7 @@ uchar* watermark::translation(uchar* buffer, const int width, const int height, 
     return res;
 }
 
+// 获得buffer1和buffer2相减得到的结果
 uchar* watermark::substract(uchar* buffer1, uchar* buffer2, const int size)
 {
     uchar* res = new uchar[size];
@@ -173,6 +175,7 @@ uchar* watermark::substract(uchar* buffer1, uchar* buffer2, const int size)
     return res;
 }
 
+// 获得从buffer提取到的边缘图像，用作添加水印位置的参考
 uchar* watermark::edgeExtract(uchar* buffer, const int width, const int height)
 {
     uchar* BL = substract(translation(buffer, width, height, 1, 0), buffer, width*height);
@@ -235,6 +238,7 @@ uchar* watermark::edgeExtract(uchar* buffer, const int width, const int height)
     return res;
 }
 
+// 由边缘图像和原图获得水印编码后的图像
 uchar* watermark::watermarkImg(uchar* buffer, uchar* edge, const int size, byteArray code)
 {
     uchar* res = new uchar[size];
